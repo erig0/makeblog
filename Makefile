@@ -82,7 +82,7 @@ NEXT_INDEX := ${NEXT_INDEX} ${post}
 .endfor
 
 .for post in ${BLOG_POSTS} ${BLOG_DRAFTS}
-${post}_fileToTitle = ${post:R:C/${BLOG_DIR}[\/][^\/]*[\/](.*)/\1/g:C/-([smtd]|ve|ll|re)(-|\$)/'\1 /g:C/([^-_])[-_]([^-_])/\1 \2/g:C/[-_]([-_])[-_]/ \1 /g}
+${post}_fileToTitle = ${post:R:C/${BLOG_DIR}[\/][^\/]*[\/](.*)/\1/g:C/-([smtd]|ve|ll|re)(-|\$)/'\1 /g:C/[-_]([^-_])/ \1/g:C/[-_]([-_])/ \1/g}
 .endfor
 
 BLOG_POSTS_REV := ${BLOG_POSTS:[-1..1]}
