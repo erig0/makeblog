@@ -254,12 +254,12 @@ blog_posts: ${DESTDIR}/${image} ${DESTDIR}/${image:R}_thumb.${image:E}
 ${DESTDIR}/${image}: ${image}
 	@echo -e "SCALE\t${image}"
 	@mkdir -p ${.TARGET:H}
-	@convert ${image} -scale 1600x1600 ${.TARGET}
+	@convert ${image} -quality 85 -scale 1600x1600 ${.TARGET}
 
 ${DESTDIR}/${image:R}_thumb.${image:E}: ${image}
 	@echo -e "THUMB\t${image}"
 	@mkdir -p ${.TARGET:H}
-	@convert ${image} -thumbnail 256x256 ${.TARGET}
+	@convert ${image} -quality 65 -thumbnail 256x256 ${.TARGET}
 
 .endfor # for each ${BLOG_POSTS_IMAGES}
 
