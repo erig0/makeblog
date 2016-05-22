@@ -172,9 +172,11 @@ ${DESTDIR}/${post:R}.html: ${post} ${HTML_HEAD_FILE} ${TEMPLATE_FILES} ${TEMPLAT
 
 # Create blog index.html as most recent post {{{2
 #
+.if !empty(BLOG_POSTS)
 blog_posts: ${DESTDIR}/${BLOG_DIR}/index.html
 ${DESTDIR}/${BLOG_DIR}/index.html: ${DESTDIR}/${BLOG_POSTS:[-1]:R}.html
 	@cp ${.ALLSRC} ${.TARGET}
+.endif
 
 # blog history index {{{2
 #
