@@ -143,7 +143,7 @@ ${DESTDIR}/${post:R}.html: ${post} ${HTML_HEAD_FILE} ${TEMPLATE_FILES} ${TEMPLAT
 	@echo "<p class=\"blog_post_date\">$$(date -j +'%B %e, %Y' ${post:C/${BLOG_DIR}.(............).*/\1/g})</p>" >> ${.TARGET}
 	@cat ${post} \
 	 | sed -e 's/[[]img[]][(]\([^).]*\)[.]\([^)]*\)[)]/<a href="\/${post:H:S/\//\\\//g}\/\1.\2" onclick="return nanolightbox(this);"><img src="\/${post:H:S/\//\\\//g}\/\1_thumb.\2" \/><\/a>/g' \
-	       -e 's/[[]video[]][(]\([^).]*\)[.]\([^)]*\)[)]/<video controls="true" autobuffer="true"><source src="\/${post:H:S/\//\\\//g}\/\1.ogv" type="video\/ogg;codecs=theora,vorbis" \/><source src="\/${post:H:S/\//\\\//g}\/\1.mp4" type="video\/mp4;codecs=h264,aac" \/><source src="\/${post:H:S/\//\\\//g}\/\1.mp4" \/>Your web browser cannot play this video.<\/video>/g' \
+	       -e 's/[[]video[]][(]\([^).]*\)[.]\([^)]*\)[)]/<video controls="true" preload="auto"><source src="\/${post:H:S/\//\\\//g}\/\1.ogv" type="video\/ogg;codecs=theora,vorbis" \/><source src="\/${post:H:S/\//\\\//g}\/\1.mp4" type="video\/mp4;codecs=h264,aac" \/><source src="\/${post:H:S/\//\\\//g}\/\1.mp4" \/>Your web browser cannot play this video.<\/video>/g' \
 	 | $(MARKDOWN) \
 	 >> ${.TARGET}
 	@echo "</div>" >> ${.TARGET}
