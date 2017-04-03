@@ -256,12 +256,25 @@ blog_posts: ${DESTDIR}/${image} ${DESTDIR}/${image:R}_thumb.${image:E}
 ${DESTDIR}/${image}: ${image}
 	@echo -e "SCALE\t${image}"
 	@mkdir -p ${.TARGET:H}
-	@convert ${image} -quality 85 -scale 1600x1600 ${.TARGET}
+	@CONVERT_ARGS="-quality 85 -scale 1600x1600"; \
+	if exiftool ${image} |grep "Rotate 270 CW" >/dev/null; then \
+		CONVERT_ARGS="$$CONVERT_ARGS -rotate 270"; \
+	elif exiftool ${image} |grep "Rotate 90 CW" >/dev/null; then \
+		CONVERT_ARGS="$$CONVERT_ARGS -rotate 90"; \
+	fi; \
+	convert ${image} $$CONVERT_ARGS ${.TARGET}
+
 
 ${DESTDIR}/${image:R}_thumb.${image:E}: ${image}
 	@echo -e "THUMB\t${image}"
 	@mkdir -p ${.TARGET:H}
-	@convert ${image} -quality 65 -thumbnail 256x256 ${.TARGET}
+	@CONVERT_ARGS="-quality 75 -thumbnail 256x256"; \
+	if exiftool ${image} |grep "Rotate 270 CW" >/dev/null; then \
+		CONVERT_ARGS="$$CONVERT_ARGS -rotate 270"; \
+	elif exiftool ${image} |grep "Rotate 90 CW" >/dev/null; then \
+		CONVERT_ARGS="$$CONVERT_ARGS -rotate 90"; \
+	fi; \
+	convert ${image} $$CONVERT_ARGS ${.TARGET}
 
 .endfor # for each ${BLOG_POSTS_IMAGES}
 
