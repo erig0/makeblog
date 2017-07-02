@@ -257,9 +257,9 @@ ${DESTDIR}/${image}: ${image}
 	@echo -e "SCALE\t${image}"
 	@mkdir -p ${.TARGET:H}
 	@CONVERT_ARGS="-strip -quality 85 -scale 1920x1920"; \
-	if exiftool ${image} |grep "Rotate 270 CW" >/dev/null; then \
+	if exiftool ${image} |grep "^Orientation" |grep "Rotate 270 CW" >/dev/null; then \
 		CONVERT_ARGS="$$CONVERT_ARGS -rotate 270"; \
-	elif exiftool ${image} |grep "Rotate 90 CW" >/dev/null; then \
+	elif exiftool ${image} |grep "^Orientation" |grep "Rotate 90 CW" >/dev/null; then \
 		CONVERT_ARGS="$$CONVERT_ARGS -rotate 90"; \
 	fi; \
 	convert ${image} $$CONVERT_ARGS ${.TARGET}
@@ -269,9 +269,9 @@ ${DESTDIR}/${image:R}_thumb.${image:E}: ${image}
 	@echo -e "THUMB\t${image}"
 	@mkdir -p ${.TARGET:H}
 	@CONVERT_ARGS="-strip -quality 70 -thumbnail 384x384"; \
-	if exiftool ${image} |grep "Rotate 270 CW" >/dev/null; then \
+	if exiftool ${image} |grep "^Orientation" |grep "Rotate 270 CW" >/dev/null; then \
 		CONVERT_ARGS="$$CONVERT_ARGS -rotate 270"; \
-	elif exiftool ${image} |grep "Rotate 90 CW" >/dev/null; then \
+	elif exiftool ${image} |grep "^Orientation" |grep "Rotate 90 CW" >/dev/null; then \
 		CONVERT_ARGS="$$CONVERT_ARGS -rotate 90"; \
 	fi; \
 	convert ${image} $$CONVERT_ARGS ${.TARGET}
