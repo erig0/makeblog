@@ -186,11 +186,12 @@ HTML_FILES+=${BLOG_HISTORY}
 ${BLOG_HISTORY}: ${BLOG_POSTS} ${MAKEFILE_LIST}
 	@echo -e "HTML\t${.TARGET}"
 	@mkdir -p ${.TARGET:H}
+	@echo "" > ${.TARGET}
 .if !empty(USE_BLOG_HISTORY_TOC)
 #
 # First build the table of contents
 #
-	@echo "<div id=\"blog_history_toc\" class=\"scale\">" > ${.TARGET}
+	@echo "<div id=\"blog_history_toc\" class=\"scale\">" >> ${.TARGET}
 	@echo "<ul>" >> ${.TARGET}
 .for month in ${BLOG_POSTS_MONTHS}
 	@echo -n "<li><a href=\"#${month}\">" >> ${.TARGET}
