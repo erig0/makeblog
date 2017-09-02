@@ -46,6 +46,7 @@ TEMPLATE_FILES_LATE?=
 HTML_FILES?=
 HTML_HEAD_FILE?=
 HAVE_NANO_LIGHTBOX?=
+USE_BLOG_HISTORY_TOC?=
 
 #
 # BLOG is optional {{{1
@@ -185,6 +186,7 @@ HTML_FILES+=${BLOG_HISTORY}
 ${BLOG_HISTORY}: ${BLOG_POSTS} ${MAKEFILE_LIST}
 	@echo -e "HTML\t${.TARGET}"
 	@mkdir -p ${.TARGET:H}
+.if !empty(USE_BLOG_HISTORY_TOC)
 #
 # First build the table of contents
 #
@@ -197,6 +199,7 @@ ${BLOG_HISTORY}: ${BLOG_POSTS} ${MAKEFILE_LIST}
 .endfor
 	@echo "</ul>" >> ${.TARGET}
 	@echo "</div>" >> ${.TARGET}
+.endif
 #
 # Add each post, group by months
 #
