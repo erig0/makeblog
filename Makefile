@@ -143,10 +143,54 @@ ${DESTDIR}/${post:R}.html: ${post} ${HTML_HEAD_FILE} ${TEMPLATE_FILES} ${TEMPLAT
 	@echo "<h2>${${post}_fileToTitle}</h2>"  >> ${.TARGET}
 	@echo "<p class=\"blog_post_date\">$$(date -j +'%B %e, %Y' ${post:C/${BLOG_DIR}.(........).*/\10000/g})</p>" >> ${.TARGET}
 	@cat ${post} \
-	 | sed -e 's/[[]img[]][(]\([^).]*\)[.]\([^)]*\)[)]/<a href="\/${post:H:S/\//\\\//g}\/\1.\2" onclick="return nanolightbox(this);"><img src="\/${post:H:S/\//\\\//g}\/\1_thumb.\2" \/><\/a>/g' \
-	       -e 's/[[]video[]][(]\([^).]*\)[.]\([^)]*\)[)]/<video controls="true" preload="auto"><source src="\/${post:H:S/\//\\\//g}\/\1.mp4" type="video\/mp4;codecs=h264,aac" \/><source src="\/${post:H:S/\//\\\//g}\/\1.mp4" \/><source src="\/${post:H:S/\//\\\//g}\/\1.ogv" type="video\/ogg;codecs=theora,vorbis" \/>Your web browser cannot play this video.<\/video>/g' \
-	 | $(MARKDOWN) \
-	 >> ${.TARGET}
+	| awk ' \
+	/^[[]img[]]/ { \
+		if (after_newline == 1 && need_end_div == 0) { \
+			print "<div class=\"image\">"; \
+			need_end_div = 1; \
+		} \
+		gsub("^[[]img[]][(]|[)][ \t]*$$", ""); \
+		printf "<a href=\""; \
+		printf "/${post:H}/" $$0; \
+		printf "\" onclick=\"return nanolightbox(this);\"><img src=\""; \
+		printf "/${post:H}/" $$0; \
+		printf "\" /></a>\n"; \
+		next; \
+	} \
+	/^[[]video[]]/ { \
+		if (after_newline == 1 && need_end_div == 0) { \
+			print "<div class=\"video\">"; \
+			need_end_div = 1; \
+		} \
+		gsub("^[[]video[]][(]|[.][a-zA-Z0-9]+[)][ \t]*$$", ""); \
+		printf "<video controls=\"true\" preload=\"auto\">"; \
+		printf "<source src=\""; \
+		printf "/${post:H}/" $$0; \
+		printf ".mp4\" type=\"video/mp4;codecs=h264,aac\" />"; \
+		printf "<source src=\""; \
+		printf "/${post:H}/" $$0; \
+		printf ".mp4\" />"; \
+		printf "<source src=\""; \
+		printf "/${post:H}/" $$0; \
+		printf ".ogv\" type=\"video/ogg;codecs=theora,vorbis\" />"; \
+		printf "Your web browser cannot play this video.</video>\n"; \
+		next; \
+	} \
+	NF { \
+		after_newline = 0; \
+	} \
+	! NF { \
+		if (need_end_div == 1) print "</div>"; \
+		after_newline = 1; \
+		need_end_div = 0; \
+	} \
+	{ print }  \
+	END { \
+		if (need_end_div == 1) print "</div>"; \
+	} \
+	' \
+	| $(MARKDOWN) \
+	>> ${.TARGET}
 	@echo "</div>" >> ${.TARGET}
 #
 # Prev/Next links
