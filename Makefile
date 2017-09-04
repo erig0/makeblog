@@ -144,6 +144,7 @@ ${DESTDIR}/${post:R}.html: ${post} ${HTML_HEAD_FILE} ${TEMPLATE_FILES} ${TEMPLAT
 	@echo "<p class=\"blog_post_date\">$$(date -j +'%B %e, %Y' ${post:C/${BLOG_DIR}.(........).*/\10000/g})</p>" >> ${.TARGET}
 	@cat ${post} \
 	| awk ' \
+	BEGIN { after_newline = 1; } \
 	/^[[]img[]]/ { \
 		if (after_newline == 1 && need_end_div == 0) { \
 			print "<div class=\"image\">"; \
