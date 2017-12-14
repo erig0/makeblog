@@ -417,6 +417,7 @@ ${DESTDIR}/${symlink}: ${MAKEFILE_LIST}
 
 clean:
 	-rm -rf ${DEPFILE}
+	-rm -rf ${DESTDIR}
 
 # Don't print the --- target --- with -j
 #
