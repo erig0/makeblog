@@ -58,8 +58,8 @@ all: blog_posts
 # Find all the blog posts, {{{2
 # Means directory names determine chronological order of blog posts.
 #
-BLOG_POSTS !=find ${BLOG_DIR} -type f -mindepth 2 -maxdepth 2 \! -name '*.draft' |sort; echo ""
-BLOG_DRAFTS!=find ${BLOG_DIR} -type f -mindepth 2 -maxdepth 2    -name '*.draft' |sort; echo ""
+BLOG_POSTS !=find ${BLOG_DIR} -mindepth 2 -maxdepth 2 -type f \! -name '*.draft' |sort; echo ""
+BLOG_DRAFTS!=find ${BLOG_DIR} -mindepth 2 -maxdepth 2 -type f   -name '*.draft' |sort; echo ""
 
 # Find all the blog media {{{2
 # 
@@ -90,7 +90,7 @@ BLOG_POSTS_REV := ${BLOG_POSTS:[-1..1]}
 BLOG_POSTS_MONTHS := ${BLOG_POSTS_REV:C/${BLOG_DIR}.(......).*/\1/g}
 BLOG_POSTS_MONTHS := ${BLOG_POSTS_MONTHS:u}
 .for month in ${BLOG_POSTS_MONTHS}
-BLOG_POSTS_MONTHS_${month} !=date -j +'%B %Y' ${month}010000
+BLOG_POSTS_MONTHS_${month} !=date -d ${month}01 +'%B %Y'
 .endfor
 
 # Dependency file for post prev/next updating. (delete case) {{{2
@@ -141,7 +141,7 @@ ${DESTDIR}/${post:R}.html: ${post} ${HTML_HEAD_FILE} ${TEMPLATE_FILES} ${TEMPLAT
 #
 	@echo "<div class=\"blog_post scale\">"  >> ${.TARGET}
 	@echo "<h2>${${post}_fileToTitle}</h2>"  >> ${.TARGET}
-	@echo "<p class=\"blog_post_date\">$$(date -j +'%B %e, %Y' ${post:C/${BLOG_DIR}.(........).*/\10000/g})</p>" >> ${.TARGET}
+	@echo "<p class=\"blog_post_date\">$$(date -d ${post:C/${BLOG_DIR}.(........).*/\1/g} +'%B %e, %Y')</p>" >> ${.TARGET}
 	@cat ${post} \
 	| awk ' \
 	BEGIN { after_newline = 1; } \
@@ -292,7 +292,7 @@ ${DESTDIR}/${BLOG_RSS}: ${BLOG_POSTS_REV:[1..10]} ${MAKEFILE_LIST}
 	@echo -n "${BLOG_RSS_URL}/${post:R}.html" >> ${.TARGET}
 	@echo -n "</link>" >> ${.TARGET}
 	@echo -n "<pubDate>" >> ${.TARGET}
-	@echo -n "$$(date -j +'%a, %d %b %Y %H:%M:%S %Z' ${post:C/${BLOG_DIR}.(........).*/\10000/g})" >> ${.TARGET}
+	@echo -n "$$(date -d ${post:C/${BLOG_DIR}.(........).*/\1/g} +'%a, %d %b %Y %H:%M:%S %Z')" >> ${.TARGET}
 	@echo -n "</pubDate>" >> ${.TARGET}
 	@echo -n "</item>" >> ${.TARGET}
 .endfor
@@ -422,3 +422,7 @@ clean:
 # Don't print the --- target --- with -j
 #
 .MAKE.JOB.PREFIX=
+
+# Force ksh so we get the right builtins
+#
+.SHELL: name=ksh
