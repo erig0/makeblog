@@ -155,7 +155,7 @@ ${DESTDIR}/${post:R}.html: ${post} ${HTML_HEAD_FILE} ${TEMPLATE_FILES} ${TEMPLAT
 		printf "/${post:H}/" $$0; \
 		printf "\" onclick=\"return nanolightbox(this);\"><img src=\""; \
 		printf "/${post:H}/" $$0; \
-		printf "\" /></a>\n"; \
+		printf "\" loading=\"lazy\" /></a>\n"; \
 		next; \
 	} \
 	/^[[]video[]]/ { \
