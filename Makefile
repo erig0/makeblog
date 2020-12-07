@@ -151,10 +151,11 @@ ${DESTDIR}/${post:R}.html: ${post} ${HTML_HEAD_FILE} ${TEMPLATE_FILES} ${TEMPLAT
 			need_end_div = 1; \
 		} \
 		gsub("^[[]img[]][(]|[)][ \t]*$$", ""); \
+		split($$0, image_path, "[.]"); \
 		printf "<a href=\""; \
 		printf "/${post:H}/" $$0; \
 		printf "\" onclick=\"return nanolightbox(this);\"><img src=\""; \
-		printf "/${post:H}/" $$0; \
+		printf "/${post:H}/" image_path[1] "_thumb." image_path[2]; \
 		printf "\" loading=\"lazy\" /></a>\n"; \
 		next; \
 	} \
