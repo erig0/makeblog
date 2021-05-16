@@ -387,6 +387,7 @@ all: static_files
 
 # Generate rules for static files {{{2
 #
+static_files:
 .for static_file in ${STATIC_FILES}
 static_files: ${DESTDIR}/${static_file}
 ${DESTDIR}/${static_file}: ${static_file} ${MAKEFILE_LIST}
