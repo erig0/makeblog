@@ -191,7 +191,7 @@ ${DESTDIR}/${post:R}.html: ${post} ${HTML_HEAD_FILE} ${TEMPLATE_FILES} ${TEMPLAT
 		if (need_end_div == 1) print "</div>"; \
 	} \
 	' \
-	| $(MARKDOWN) \
+	| ${MARKDOWN} \
 	>> ${.TARGET}
 	@echo "</div>" >> ${.TARGET}
 #
